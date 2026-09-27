@@ -2,5 +2,3 @@
 
 Repository for lab work - Fall 2026
 
-lol
-
