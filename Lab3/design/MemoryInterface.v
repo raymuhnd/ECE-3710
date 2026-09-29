@@ -49,15 +49,3 @@ module MemoryInterface (
     end
 
 endmodule
-
-// Memory interface hex file(not sure what this is).
-//@000
-//0010
-//0020
-//0030
-
-//@1FE
-//0040
-//0050
-//0060
-//0070
