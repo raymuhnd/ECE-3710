@@ -18,7 +18,7 @@ module MemoryInterface (
 
     reg [15:0] Memory [0:1023];
 
-    localparam INIT_FILE = "C:/VerilogProjects/Lab3_Memory_interface/Lab3_Memory_interface.srcs/sources_1/new/memory_init.hex";
+    localparam INIT_FILE = "memory_init.hex";
 
     initial begin
         $readmemh(INIT_FILE, Memory);
