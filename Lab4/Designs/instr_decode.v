@@ -14,6 +14,7 @@ module instr_decode(
     output is_store,
     output is_branch, 
     output is_jump,
+    output is_jal,
     output reg_write,
     output flag_en
     );
@@ -42,6 +43,7 @@ module instr_decode(
     assign is_load   = (op == 4'b0100) && (ext == 4'b0000);
     assign is_store  = (op == 4'b0100) && (ext == 4'b0100);
     assign is_jump   = (op == 4'b0100) && (ext == 4'b1100);
+    assign is_jal    = (op == 4'b0100) && (ext == 4'b1000);
     assign is_branch = (op == 4'b1100);
 
     // CMP CMPI  do not write back
