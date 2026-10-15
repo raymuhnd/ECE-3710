@@ -1,4 +1,4 @@
-`timescale 1ns / 1ps
+// every output depend only on the state register (moore style fsm)
 module cpu_fsm (
     input  wire       clk,
     input  wire       rst_n,
@@ -49,7 +49,7 @@ module cpu_fsm (
     // next state logic
     always @(posedge clk) begin
         if (!rst_n)
-            y <= S_FETCH;
+            curr_state <= S_FETCH;
         else begin
             case (y)
                 S_FETCH:  curr_state <= S_IRLOAD;
