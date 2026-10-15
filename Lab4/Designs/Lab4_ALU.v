@@ -2,6 +2,7 @@
 module Lab4_ALU(A, B, C, Opcode, Flags);
 input [15:0] A, B;
 input [7:0] Opcode;
+input CarryIn;
 output reg [15:0] C;
 output reg [4:0] Flags; //Flags[4] Z bit, Flags[3] Carry, Flags[2] Overflow, Flags[1] Less Than,Flags[0] Negative
 
@@ -27,9 +28,9 @@ parameter AND = 8'b00000001;
 parameter ANDI = 8'b0001????;     
 parameter OR = 8'b00000010;
 parameter ORI = 8'b0010????;       
-parameter XOR = 8'b00000011
+parameter XOR = 8'b00000011;
 parameter XORI = 8'b0011????;      
-parameter NOT = 8'b00000100
+parameter NOT = 8'b00000100;
 parameter MOV = 8'b00001101;       
 parameter MOVI = 8'b1101????;      
 parameter LUI = 8'b1111????;       
@@ -38,8 +39,9 @@ parameter LSHI = 8'b1000000?;
 parameter ALSH = 8'b00010101;
 parameter NOP = 8'b00000000;
 
-always @(A, B, Opcode)
+always @(*)
 begin
+	//Needed: defaults to avoid latches??
 	casez (Opcode)
 	ADD:
 		begin
@@ -99,7 +101,7 @@ begin
 		
 	ADDC:
 		begin
-			sum17 = A + B + Flags[3];
+			sum17 = A + B + CarryIn;
 			C = sum17[15:0];
 			if (C == 16'b0)
 				Flags[4] = 1'b1;
@@ -127,7 +129,7 @@ begin
 		
 	ADDCI:
 		begin
-			sum17 = A + B + Flags[3];
+			sum17 = A + B + CarryIn;
 			C = sum17[15:0];
 			if (C == 16'b0)
 				Flags[4] = 1'b1;
@@ -155,7 +157,7 @@ begin
 		end
 		
 	SUBC:begin
-		diff17 = {1'b0, A} - {1'b0, B} - (Flags[3]);
+		diff17 = {1'b0, A} - {1'b0, B} - (CarryIn);
 		C = diff17[15:0];
 		Flags[4] = (C == 16'b0);                          
 		Flags[3] = diff17[16];                            
