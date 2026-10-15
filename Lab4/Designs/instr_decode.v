@@ -7,6 +7,7 @@ module instr_decode(
     output [3:0] rb_addr,
     output [7:0] disp, // to pc_unit
     output [3:0] cond, 
+    output reg [15:0] imm16;
     output is_alu,
     output use_imm, 
     output is_load,
