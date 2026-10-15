@@ -32,7 +32,7 @@ module pc_unit(
                 end
                 
                 JUMP: begin
-                    pc <= pc + r_target;
+                    pc <= r_target; //<= load directly; value is a location not displacement
                 end
                 2'b11: begin
                     pc <= pc_plus;
