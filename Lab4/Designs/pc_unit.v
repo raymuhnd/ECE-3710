@@ -34,6 +34,7 @@ module pc_unit(
                 JUMP: begin
                     pc <= r_target; //<= load directly; value is a location not displacement
                 end
+                // is 2'b11 necessary?? functionality is exact same as default
                 2'b11: begin
                     pc <= pc_plus;
                 end
