@@ -13,15 +13,15 @@ module cpu_fsm (
     input  wire       flag_en,
     input  wire       take,
 
-    output reg        ir_en,
-    output reg        pc_en,
-    output reg  [1:0] pc_sel,
-    output reg        mem_en,
-    output reg        mem_we,
-    output reg        addr_sel,
-    output reg        reg_we,
-    output reg  [1:0] wb_sel,
-    output reg        flag_we,
+	output reg        ir_en, // ir enable (loads the new instruction from mem)
+	output reg        pc_en, // pc enable (1 = pc updates, 0 = pc waits)
+	output reg  [1:0] pc_sel, // pc select (picks new pc value, 00 = pc+1, 01 = pc + displ, 10 = reg (jump))
+    output reg        mem_en, // mem enable, 1 = port A does read/write
+	output reg        mem_we, // mem write enable, 1 = write (store), 0 = read
+	output reg        addr_sel, // addr select picks mem addr, 0 = pc (instr fetch), 1 = reg (load/store addr)
+    output reg        reg_we, // reg write enable, 1 = write val into Rdest
+	output reg  [1:0] wb_sel, // write back select, what is written into reg 00 = ALU result, 01 = mem data (load), 10 = pc+1
+    output reg        flag_we, // flag write enable, 1 = save ALU flags into psr
 
     output wire [3:0] state
 );
@@ -31,14 +31,14 @@ module cpu_fsm (
                      S_DECODE   = 4'd2,
                      S_ALU_W    = 4'd3,    // write result, flags unchanged
                      S_ALU_WF   = 4'd4,    // write result and flags
-                     S_ALU_F    = 4'd5,    // flags only (CMP)
+                     S_ALU_F    = 4'd5,    // flags only cmp
                      S_LOAD1    = 4'd6,
                      S_LOAD2    = 4'd7,
                      S_STORE    = 4'd8,
                      S_BRANCH_T = 4'd9,
                      S_JUMP_T   = 4'd10,
                      S_JAL      = 4'd11,
-                     S_PC_INC   = 4'd12;   // NOP / branch or jump not taken
+                     S_PC_INC   = 4'd12;   // NOP/branch or jump not taken
 
     localparam [1:0] PC_INC = 2'b00, PC_BRANCH = 2'b01, PC_JUMP = 2'b10;
     localparam [1:0] WB_ALU = 2'b00, WB_MEM = 2'b01, WB_PC = 2'b10;
@@ -68,7 +68,7 @@ module cpu_fsm (
                     else                curr_state <= S_PC_INC;
                 end
                 S_LOAD1:  curr_state <= S_LOAD2;
-                default:  curr_state <= S_FETCH;    // every execute state, and illegal states
+                default:  curr_state <= S_FETCH;  
             endcase
         end
     end
@@ -87,22 +87,22 @@ module cpu_fsm (
 
         case (curr_state)
             S_FETCH: begin
-                mem_en   = 1'b1;          // read mem[PC]
+				mem_en   = 1'b1;          // read mem[pc]
             end
 
             S_IRLOAD: begin
-                ir_en    = 1'b1;          // IR <- mem[PC]
+				ir_en    = 1'b1;          // IR <- mem[pc]
             end
 
-            S_DECODE: ;                   // decode + register read only
+            S_DECODE: ;                   // decode+register read only
 
             S_ALU_W: begin
-                reg_we   = 1'b1;     // 0 for CMP/CMPI
+                reg_we   = 1'b1;     // 0 for cmp/cmpi
                 pc_en    = 1'b1;
             end
 
 	    S_ALU_WF: begin
-                reg_we   = 1'b1;     // 0 for CMP/CMPI
+                reg_we   = 1'b1;     // 0 for cmp/cmpi
                 flag_we  = 1'b1;
                 pc_en    = 1'b1;
             end
