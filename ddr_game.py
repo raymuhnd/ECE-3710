@@ -1,5 +1,4 @@
-"""Four-lane DDR prototype for the CRISC16 project (Python 3.9+).
-
+"""
 Run:   python ddr_game.py          # Play using Tkinter and the arrow keys.
        python ddr_game.py --demo   # Deterministic example, no window needed.
        python ddr_game.py --test   # Check timing, scoring, and state transitions.
